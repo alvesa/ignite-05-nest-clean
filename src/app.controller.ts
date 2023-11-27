@@ -1,17 +1,17 @@
-import { Controller, Get, Post } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common'
 import { IAppService } from './app.service'
+import { PrismaService } from './prisma/prisma.service'
+import { User } from '@prisma/client'
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: IAppService) {}
+  constructor(
+    private readonly appService: IAppService,
+    private prisma: PrismaService,
+  ) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello()
-  }
-
-  @Post()
-  postHello(): string {
-    return `POST: ${this.appService.getHello()}`
+  async getHello(): Promise<User[]> {
+    return await this.prisma.user.findMany()
   }
 }
